@@ -571,6 +571,13 @@ resource "null_resource" "Node01_Service" {
     bastion_password    = "${var.bastion_password}"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "bash -c 'systemctl stop redis.service'",
+      "bash -c 'pkill redis-server'"
+    ]
+  }
+
   provisioner "file" {
     destination = "/usr/lib/systemd/system/redis.service"
     content     = <<EOF
@@ -592,17 +599,11 @@ RuntimeDirectoryMode=0755
 WantedBy=multi-user.target
 EOF
   }
-  provisioner "remote-exec" {
-    inline = [
-      "bash -c 'systemctl stop redis.service'",
-      "bash -c 'pkill redis-server'",
-      "bash -c 'systemctl daemon-reload'"
-    ]
-  }
 
   provisioner "remote-exec" {
     inline = [
-      "bash -c 'systemctl start redis.service'"
+      "bash -c 'systemctl daemon-reload'",
+      "bash -c '/usr/bin/redis-server /etc/redis/${var.Node01-name}.conf --daemonize yes'"
     ]
   }
 }
