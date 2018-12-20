@@ -498,7 +498,7 @@ resource "camc_softwaredeploy" "Node01_redis" {
   "environment_name": "_default",
   "host_ip": "${vsphere_virtual_machine.Node01.clone.0.customize.0.network_interface.0.ipv4_address}",
   "node_name": "${var.Node01-name}",
-  "runlist": "recipe[redisio], recipe[redisio::enable]",
+  "runlist": "recipe[redisio]",
   "node_attributes": {
     "ibm": {
       "sw_repo": "${var.ibm_sw_repo}",
@@ -552,6 +552,54 @@ resource "camc_vaultitem" "VaultItem" {
   }
 }
 EOT
+}
+
+resource "null_resource" "Node01_Service" {
+  depends_on = ["vsphere_virtual_machine.Node01", "camc_softwaredeploy.Node01_redis"]
+
+  # Specify the ssh connection
+  connection {
+    type     = "ssh"
+    user     = "${var.Node01-os_admin_user}"
+    password = "${var.Node01-os_password}"
+    host = "${var.Node01_ipv4_address}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${ length(var.bastion_private_key) > 0 ? base64decode(var.bastion_private_key) : var.bastion_private_key}"
+    bastion_port        = "${var.bastion_port}"
+    bastion_host_key    = "${var.bastion_host_key}"
+    bastion_password    = "${var.bastion_password}"
+  }
+
+  provisioner "file" {
+    destination = "/usr/lib/systemd/system/redis.service"
+    content     = <<EOF
+[Unit]
+Description=Redis persistent key-value database
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/redis-server /etc/redis/${var.Node01-name}.conf --daemonize yes
+ExecStop=/usr/libexec/redis-shutdown
+Type=forking
+User=redis
+Group=redis
+#PIDFile=/var/run/redis.pid
+RuntimeDirectory=redis
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "bash -c 'systemctl daemon-reload'",
+      "bash -c 'pkill redis-server'",
+      "bash -c 'service redis restart'"
+    ]
+  }
 }
 
 output "Node01_ip" {
