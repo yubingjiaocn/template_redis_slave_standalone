@@ -506,16 +506,18 @@ resource "camc_softwaredeploy" "Node01_redis" {
     },
     "redisio": {
       "package_install": "true",
-      "servers": [
+      "default_settings":
         {
           "port": "${var.Node01_redis_port}",
           "name": "${var.Node01-name}",
+          "address": "0.0.0.0",
           "slaveof": {
             "address": "${var.Node01_redis_master_address}",
             "port": "${var.Node01_redis_master_port}"
-          }
+          },
+          "protected_mode": "no"
         }
-      ]
+
     }
   },
   "vault_content": {

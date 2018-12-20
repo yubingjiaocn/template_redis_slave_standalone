@@ -421,7 +421,7 @@
       "name": "Node01_redis_master_address",
       "type": "string",
       "description": "Master redis address",
-      "default": "6379",
+      "default": "",
       "hidden": false,
       "label": "Redis Master Address - Node01",
       "secured": false,
