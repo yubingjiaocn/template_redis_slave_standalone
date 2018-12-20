@@ -1,0 +1,65 @@
+{
+    "name": "Redis Slave on a single virtual machine - VMware vSphere",
+    "description": "This template deploys Redis Slave on a Linux virtual machine.",
+    "version": "1.0",
+    "imageUrl": "",
+    "image": "",
+    "type": "chefcontent",
+    "status": "active",
+    "manifest": {
+        "template_type": "Terraform",
+        "template_format": "HCL",
+        "template_provider": "VMware vSphere",
+        "template": {
+            "templateData": "",
+            "templateVariables": "",
+            "templateOutput": ""
+        },
+        "template_source": {
+            "githubRepoUrl": "",
+            "githubAccessToken": "",
+            "relativePathToTemplateFolder": "vmware/terraform",
+            "templateFileName": "redis_slave_standalone.tf"
+        }
+    },
+    "metadata": {
+        "displayName": "Redis Slave on a single virtual machine",
+        "providerDisplayName": "VMware vSphere",
+        "longDescription": "This template deploys Redis Slave on a Linux virtual machine.",
+        "bullets": [{
+                "title": "Clouds",
+                "description": " VMware<br>"
+            },
+            {
+                "title": "Operating Systems Supported",
+                "description": "Red Hat Enterprise Linux 7<br>Ubuntu 16.04<br>"
+            },
+            {
+                "title": "Topology",
+                "description": "1 virtual machine:<br>  Linux Virual Machine with Redis Slave Server<br>"
+            },
+            {
+                "title": "Software Deployed",
+                "description": "Redis<br>"
+            },
+            {
+                "title": "Default Virtual Machine Settings",
+                "description": " vCPU 2, Memory (GB) 4, Disk (GB) 100<br>"
+            },
+            {
+                "title": "Usage and Special Notes",
+                "description": "1. The user is responsible for obtaining appropriate software licenses and downloads prior to template deployment."
+            }
+        ],
+        "featuredImageUrl": "",
+        "imageUrl": "",
+        "mediumImageUrl": "",
+        "smallImageUrl": "",
+        "documentationUrl": "",
+        "termsUrl": "",
+        "media": []
+    },
+    "toolchain": {
+        "git": "https://github.com/ibmcam/cam-toolchain"
+    }
+}
